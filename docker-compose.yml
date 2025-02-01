@@ -1,6 +1,22 @@
 version: '3.6'
 
+networks:
+  web:
+
 services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+    volumes:
+      - './nginx.conf:/etc/nginx.conf'
+    networks:
+      - web
+  backend:
+    build:
+      context: ./app
 
   postgres:
     image: postgres:16-alpine
@@ -13,3 +29,5 @@ services:
     volumes:
       - ./postgresql/dumps:/code/dumps
       - ./postgresql/data:/var/lib/postgresql/data
+    networks:
+      - web
